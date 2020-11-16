@@ -13,6 +13,10 @@ public class Order {
         this.quantity = quantity;
         this.price = price;
    }
+    
+   public void setprice(BigDecimal price) {
+       this.price = price;
+   }
    
    public int getOrderID() {
        return orderID;

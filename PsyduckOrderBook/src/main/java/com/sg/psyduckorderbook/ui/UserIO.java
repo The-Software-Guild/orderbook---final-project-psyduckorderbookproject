@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 public interface UserIO {
     
     void print(String msg);
+    
+    void println(String msg);
 
     int readInt(String prompt);
 

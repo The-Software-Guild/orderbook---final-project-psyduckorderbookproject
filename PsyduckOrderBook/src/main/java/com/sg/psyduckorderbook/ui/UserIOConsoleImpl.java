@@ -10,6 +10,11 @@ public class UserIOConsoleImpl implements UserIO {
 
     @Override
     public void print(String msg) {
+        System.out.print(msg);
+    }
+    
+    @Override
+    public void println(String msg) {
         System.out.println(msg);
     }
 
