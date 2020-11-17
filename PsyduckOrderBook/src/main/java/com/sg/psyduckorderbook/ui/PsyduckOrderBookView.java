@@ -5,6 +5,7 @@ import com.sg.psyduckorderbook.dto.Order;
 import com.sg.psyduckorderbook.dto.SellOrder;
 import com.sg.psyduckorderbook.dto.Trade;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PsyduckOrderBookView {
@@ -27,31 +28,40 @@ public class PsyduckOrderBookView {
         return io.readInt("Please select from the choices above.", 1, 7);
     }
 
-    public void displayOrderBook(List<Order> orderBook) {
-        int i = 1;
+    public void displayOrderBook(List<ArrayList> orderBook) {
+        int n = 1;
         int page = 10;
-        io.println("Buy Orders                            Sell Orders");
-        for (Order currentOrder: orderBook) {
-            if(i%2 != 0) {
-                io.print("ID: " + currentOrder.getOrderID() + ", Price: " + 
-                    currentOrder.getPrice()+ ", Quantity: " + currentOrder.getQuantity() + "       ");
-                i++;
-                
-            } else if (i%2 == 0) {
-                io.println("ID: " + currentOrder.getOrderID() + ", Price: " + 
-                    currentOrder.getPrice()+ ", Quantity: " + currentOrder.getQuantity());
-                i++;
-            } 
-            if(i > page) {
+        int size = 0;
+        int amount = 0;
+        io.println("Buy Orders\t\t\t\tSell Orders");
+        ArrayList<BuyOrder> myBuyOrders = orderBook.get(0);
+        ArrayList<SellOrder> mySellOrders = orderBook.get(1);
+        size = myBuyOrders.size();
+        int difference = myBuyOrders.size() - mySellOrders.size();
+        amount = size/page;
+        for(int i = size ; i > 0; i --) {
+            
+            if (i < myBuyOrders.size()) {
+                io.print("ID: " + myBuyOrders.get(i).getOrderID() + ", Price: " +
+                    myBuyOrders.get(i).getPrice() + ", Quantity: " + 
+                    myBuyOrders.get(i).getQuantity() + "\t");
+            }
+            if (i - difference < mySellOrders.size()) {
+                io.println("ID: " + mySellOrders.get(i-difference).getOrderID() + ", Price: " +
+                    mySellOrders.get(i-difference).getPrice() + ", Quantity: " + 
+                    mySellOrders.get(i-difference).getQuantity() + "       ");
+            }
+            n++;
+            if(n > page) {
                 boolean input = false;
                 String answer = "";
                 io.println("");
                 if(page/orderBook.size() == 0) {
-                    io.println("Would you like to keep going? There is " + 
-                        String.valueOf(page/orderBook.size() + 1 + " page left"));
+                    System.out.println(size);
+                    io.println("Would you like to keep going? There is 1 page left");
                 } else {
                     io.println("Would you like to keep going? There are " + 
-                        String.valueOf(page/orderBook.size() + 1 + " pages left"));
+                        String.valueOf(amount) + " pages left");
                 }
                 while(!input) {
                     answer = io.readString("Please input yes or no").toLowerCase();
@@ -62,8 +72,10 @@ public class PsyduckOrderBookView {
                     }
                 }
                 if(answer.equals("yes")) {
-                    i = 1;
+                    n = 1;
+                    amount --;
                     io.println("");
+                    io.println("Buy Orders                                  Sell Orders");
                 } else if (answer.equals("no"))
                     break;
             }
@@ -77,6 +89,13 @@ public class PsyduckOrderBookView {
     public void unknownCommand() {
         io.println("UNKNOWN COMMANDS ENTERED");
     }
+    
+    public void allTrades(List<Trade> trades) {
+        for (Trade currentTrade: trades) {
+            io.println("Time: " + currentTrade.getTime() + ", Trade ID#: " + 
+                currentTrade.getNumberID() + ", Quantity: " + currentTrade.getQuantity()); 
+        }
+    }
 
     public void matchID(List<Trade> trades) {
         int num = io.readInt("Please enter an ID number");
@@ -85,28 +104,18 @@ public class PsyduckOrderBookView {
         for (Trade currentTrade: trades) { 
             if (num == currentTrade.getNumberID()) {
                 io.println("ID: " + currentTrade.getNumberID() + ", Price: " + 
-                    currentTrade.getQuantity() + ", Quantity: " + currentTrade.getQuantity()
+                    currentTrade.getPrice()+ ", Quantity: " + currentTrade.getQuantity()
                     + ", Time: " + currentTrade.getTime());
                 valid = true;
             }
         }
-        
         if (valid == false) {
             io.println("There is no order by that ID number");
         }
     }
 
-    public void matchOrder(BuyOrder ex1, SellOrder ex2) {  
-        io.println("Matching the following buy and sell orders");
-        io.println("Buy Order                             Sell Order");
-        io.print("ID: " + ex1.getOrderID() + ", Price: " + 
-                    ex1.getPrice()+ ", Quantity: " + ex1.getQuantity() + "       ");
-        io.println("ID: " + ex2.getOrderID() + ", Price: " + 
-                    ex2.getPrice()+ ", Quantity: " + ex2.getQuantity() + "       ");
-    }
-
     public void matchAllBanner() {
-        io.println("Matching All Orders");
+        io.println("All Orders Have Been Matched");
     }
 
     public void matchAllOrders(Order order1, Order order2) {
@@ -138,7 +147,7 @@ public class PsyduckOrderBookView {
         for (SellOrder seller: sellOrders) {
             avgSellPrice = seller.getPrice().add(avgSellPrice);
             sellQuantity = seller.getQuantity().add(sellQuantity);
-            numBuyOrders++;
+            numSellOrders++;
         }
         avgSellPrice = avgSellPrice.divide(new BigDecimal(sellOrders.size()));
         
@@ -157,5 +166,21 @@ public class PsyduckOrderBookView {
 
     public void tradeFailure() {
         io.println("Error while doing trade");
+    }
+
+    public void load() {
+        io.println("Matching all Orders please wait...");
+    }
+
+    public void loadError() {
+        io.println("Error while loading program");
+    }
+
+    public void emptyOrderBook() {
+        io.println("OrderBook is empty");
+    }
+
+    public void noTrades() {
+        io.println("No trades have been completed at this time");
     }
 }

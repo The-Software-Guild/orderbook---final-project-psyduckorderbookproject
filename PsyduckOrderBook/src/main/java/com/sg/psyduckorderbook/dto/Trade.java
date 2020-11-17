@@ -10,20 +10,11 @@ public class Trade {
     BigDecimal price;
     BigDecimal quantity;
     
-    public Trade(int numberID) {
+    public Trade(int numberID, LocalDateTime time, BigDecimal price, BigDecimal quantity) {
        this.numberID = numberID;
-    }
-    
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
-    
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-    
-    public void setQuantity(BigDecimal quantity) {
-        this.quantity = quantity;
+       this.time = time;
+       this.price = price;
+       this.quantity = quantity;
     }
     
     public int getNumberID() {
@@ -40,5 +31,10 @@ public class Trade {
     
     public BigDecimal getQuantity() {
         return quantity;
+    }
+    
+    public String toStringFile(){
+        return "Time: " + String.valueOf(time) + ", Number ID: " + String.valueOf(numberID) +
+            ", Price: " + String.valueOf(price) + ", Quantity: " + String.valueOf(quantity);
     }
 }

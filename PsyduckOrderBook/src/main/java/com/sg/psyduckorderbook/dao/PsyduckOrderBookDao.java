@@ -1,26 +1,39 @@
 package com.sg.psyduckorderbook.dao;
 
+import com.sg.psyduckorderbook.dto.BuyOrder;
+import com.sg.psyduckorderbook.dto.SellOrder;
+import com.sg.psyduckorderbook.dto.Trade;
+import java.util.ArrayList;
+
 public interface PsyduckOrderBookDao {
+
+    public boolean isEmpty();
     
-    public void display();
+    public Trade match();
     
-    public void displayStats();
-    
-    public void match();
+    public void load() throws PsyduckOrderBookPersistenceException;
     
     public void matchAllOrders();
     
-    public void addAllOrders();
+    public void addBuyOrder(BuyOrder newBuyOrder);
     
-    public void addBuyOrder();
+    public void addSellOrder(SellOrder newSellOrder);
     
-    public void addSellOrder();
+    public void fillFullBuyOrder(BuyOrder myBuyOrder);
     
-    public void fillFullBuyOrder();
+    public void fillFullSellOrder(SellOrder mySellOrder);
     
-    public void fillFullSellOrder();
+    public void fillPartialBuyOrder(BuyOrder myBuyOrder, SellOrder mySellOrder);
     
-    public void fillPartialBuyOrder();
+    public void fillPartialSellOrder(BuyOrder myBuyOrder, SellOrder mySellOrder);
     
-    public void fillPartialSellOrder();
+    public ArrayList<BuyOrder> getBuyOrders();
+    
+    public ArrayList<SellOrder> getSellOrders();
+    
+    public ArrayList<ArrayList> getOrderBook();
+    
+    public ArrayList<Trade> getTrades();
+
+    public void close();
 }
