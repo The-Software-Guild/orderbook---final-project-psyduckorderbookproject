@@ -1,12 +1,12 @@
 package com.sg.psyduckorderbook.dto;
 
 import java.math.BigDecimal;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public class Trade {
     
     int numberID;
-    LocalTime time;
+    LocalDateTime time;
     BigDecimal price;
     BigDecimal quantity;
     
@@ -14,7 +14,7 @@ public class Trade {
        this.numberID = numberID;
     }
     
-    public void setTime(LocalTime time) {
+    public void setTime(LocalDateTime time) {
         this.time = time;
     }
     
@@ -30,7 +30,7 @@ public class Trade {
         return numberID;
     }
     
-    public LocalTime getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
     

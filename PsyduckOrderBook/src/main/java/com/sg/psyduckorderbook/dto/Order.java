@@ -5,10 +5,10 @@ import java.math.BigDecimal;
 public class Order {
     
     public int orderID;
-    public int quantity;
+    public BigDecimal quantity;
     public BigDecimal price;
     
-    public Order(int orderID, int quantity, BigDecimal price) {
+    public Order(int orderID, BigDecimal quantity, BigDecimal price) {
         this.orderID = orderID;
         this.quantity = quantity;
         this.price = price;
@@ -18,11 +18,15 @@ public class Order {
        this.price = price;
    }
    
+   public void setQuantity(BigDecimal quantity) {
+       this.quantity = quantity;
+   }
+   
    public int getOrderID() {
        return orderID;
    }
    
-   public int getQuantity() {
+   public BigDecimal getQuantity() {
        return quantity;
    }
    
