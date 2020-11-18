@@ -1,154 +1,103 @@
 package com.sg.psyduckorderbook.service;
 
+import com.sg.psyduckorderbook.dao.PsyduckOrderBookDao;
+import com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImpl;
 import com.sg.psyduckorderbook.dto.BuyOrder;
 import com.sg.psyduckorderbook.dto.SellOrder;
 import com.sg.psyduckorderbook.dto.Trade;
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class PsyduckOrderBookServiceLayerImplTest {
     
+    PsyduckOrderBookServiceLayer service;
+    
     public PsyduckOrderBookServiceLayerImplTest() {
+        //PsyduckOrderBookDao dao = new PsyduckOrderDaoStubImpl();
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("ApplicationContext.xml");
+        service = ctx.getBean("serviceLayer", PsyduckOrderBookServiceLayer.class);
     }
 
-    @org.junit.jupiter.api.BeforeAll
-    public static void setUpClass() throws Exception {
-    }
-
-    @org.junit.jupiter.api.AfterAll
-    public static void tearDownClass() throws Exception {
-    }
-
-    @org.junit.jupiter.api.BeforeEach
-    public void setUp() throws Exception {
-    }
-
-    @org.junit.jupiter.api.AfterEach
-    public void tearDown() throws Exception {
-    }
-
-    /**
-     * Test of load method, of class PsyduckOrderBookServiceLayerImpl.
-     */
-    @org.junit.jupiter.api.Test
+    @Test
     public void testLoad() throws Exception {
-        System.out.println("load");
-        PsyduckOrderBookServiceLayerImpl instance = null;
-        instance.load();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        ArrayList<BuyOrder> buyOrders = service.getBuyOrders();
+        ArrayList<SellOrder> sellOrders = service.getSellOrders();
+        
+        assertFalse(buyOrders.isEmpty());
+        assertFalse(sellOrders.isEmpty());
     }
 
-    /**
-     * Test of match method, of class PsyduckOrderBookServiceLayerImpl.
-     */
     @org.junit.jupiter.api.Test
     public void testMatch() throws Exception {
-        System.out.println("match");
-        PsyduckOrderBookServiceLayerImpl instance = null;
-        Trade expResult = null;
-        Trade result = instance.match();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+       Trade result = service.match();
+       Trade expected = new Trade(1, result.getTime(), 
+               new BigDecimal(190), new BigDecimal(42));
+       assertEquals(result.getNumberID(), expected.getNumberID());
+       assertEquals(result.getPrice(), expected.getPrice());
+       assertEquals(result.getQuantity(), expected.getQuantity());
     }
-
-    /**
-     * Test of matchAllOrders method, of class PsyduckOrderBookServiceLayerImpl.
-     */
+    
     @org.junit.jupiter.api.Test
-    public void testMatchAllOrders() {
-        System.out.println("matchAllOrders");
-        PsyduckOrderBookServiceLayerImpl instance = null;
-        instance.matchAllOrders();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testMatchAllOrders() throws PsyduckOrderBookIsEmpty {
+        boolean isEmpty = false;
+        Trade match = service.match();
+        if (match == null) {
+            isEmpty = true;
+        }
+        assertFalse(isEmpty);
     }
-
-    /**
-     * Test of isEmpty method, of class PsyduckOrderBookServiceLayerImpl.
-     */
+    
     @org.junit.jupiter.api.Test
     public void testIsEmpty() {
-        System.out.println("isEmpty");
-        PsyduckOrderBookServiceLayerImpl instance = null;
-        boolean expResult = false;
-        boolean result = instance.isEmpty();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        boolean empty = service.isEmpty();
+        assertFalse(empty);
     }
-
-    /**
-     * Test of getOrderBook method, of class PsyduckOrderBookServiceLayerImpl.
-     */
+    
     @org.junit.jupiter.api.Test
     public void testGetOrderBook() {
-        System.out.println("getOrderBook");
-        PsyduckOrderBookServiceLayerImpl instance = null;
-        ArrayList<ArrayList> expResult = null;
-        ArrayList<ArrayList> result = instance.getOrderBook();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        ArrayList<ArrayList> orderBook = service.getOrderBook();
+        int expectedSize = 2;
+        int sizeResult = orderBook.size();
+        boolean buyEmpty = false;
+        boolean sellEmpty = false; 
+        if(orderBook.get(0).isEmpty())
+            buyEmpty = true;
+        if(orderBook.get(1).isEmpty())
+            sellEmpty = true; 
+        assertEquals(expectedSize, sizeResult);
+        assertFalse(buyEmpty);
+        assertFalse(sellEmpty);
     }
 
-    /**
-     * Test of getSellOrders method, of class PsyduckOrderBookServiceLayerImpl.
-     */
     @org.junit.jupiter.api.Test
     public void testGetSellOrders() {
-        System.out.println("getSellOrders");
-        PsyduckOrderBookServiceLayerImpl instance = null;
-        ArrayList<SellOrder> expResult = null;
-        ArrayList<SellOrder> result = instance.getSellOrders();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        boolean empty = false;
+        ArrayList<SellOrder> sellOrders = service.getSellOrders();
+        if(sellOrders.isEmpty())
+            empty = true;   
+        assertFalse(empty);
     }
 
-    /**
-     * Test of getBuyOrders method, of class PsyduckOrderBookServiceLayerImpl.
-     */
     @org.junit.jupiter.api.Test
     public void testGetBuyOrders() {
-        System.out.println("getBuyOrders");
-        PsyduckOrderBookServiceLayerImpl instance = null;
-        ArrayList<BuyOrder> expResult = null;
-        ArrayList<BuyOrder> result = instance.getBuyOrders();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        boolean empty = false;
+        ArrayList<BuyOrder> buyOrders = service.getBuyOrders();
+        System.out.println(buyOrders.isEmpty());
+        if(buyOrders.isEmpty())
+            empty = true;   
+        assertFalse(empty);
     }
-
-    /**
-     * Test of getTrades method, of class PsyduckOrderBookServiceLayerImpl.
-     */
+    
     @org.junit.jupiter.api.Test
     public void testGetTrades() {
-        System.out.println("getTrades");
-        PsyduckOrderBookServiceLayerImpl instance = null;
-        ArrayList<Trade> expResult = null;
-        ArrayList<Trade> result = instance.getTrades();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of close method, of class PsyduckOrderBookServiceLayerImpl.
-     */
-    @org.junit.jupiter.api.Test
-    public void testClose() {
-        System.out.println("close");
-        PsyduckOrderBookServiceLayerImpl instance = null;
-        instance.close();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        boolean empty = false;
+        ArrayList<Trade> trade = service.getTrades();
+        if(trade.isEmpty())
+            empty = true; 
+        assertFalse(empty);
     }
 }

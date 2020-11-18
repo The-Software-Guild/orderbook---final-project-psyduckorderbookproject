@@ -3,6 +3,8 @@ package com.sg.psyduckorderbook.dao;
 import com.sg.psyduckorderbook.dto.BuyOrder;
 import com.sg.psyduckorderbook.dto.SellOrder;
 import com.sg.psyduckorderbook.dto.Trade;
+import com.sg.psyduckorderbook.service.PsyduckOrderBookIsEmpty;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
@@ -12,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PsyduckOrderBookDaoFileImplTest {
+    
+    PsyduckOrderBookDaoFileImpl localDao;
     
     public PsyduckOrderBookDaoFileImplTest() {
     }
@@ -25,11 +29,15 @@ public class PsyduckOrderBookDaoFileImplTest {
     }
     
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception{
+        localDao = new PsyduckOrderBookDaoFileImpl();
+        localDao.load();
+        
     }
     
     @AfterEach
     public void tearDown() {
+        localDao.close();
     }
 
     /**
@@ -38,22 +46,34 @@ public class PsyduckOrderBookDaoFileImplTest {
     @Test
     public void testLoad() throws Exception {
         System.out.println("load");
-        PsyduckOrderBookDaoFileImpl instance = new PsyduckOrderBookDaoFileImpl();
-        instance.load();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //PsyduckOrderBookDaoFileImpl instance = new PsyduckOrderBookDaoFileImpl();
+        //instance.load();
+        ArrayList<ArrayList> myOrderBook = localDao.getOrderBook();
+        assertNotNull(myOrderBook.get(0));
+        assertNotNull(myOrderBook.get(1));
+        assertEquals(1000, myOrderBook.get(0).size());
+        assertEquals(1000, myOrderBook.get(1).size());
     }
 
 
     @Test
     public void testMatch() {
         System.out.println("match");
-        PsyduckOrderBookDaoFileImpl instance = new PsyduckOrderBookDaoFileImpl();
-        Trade expResult = null;
-        Trade result = instance.match();
-        assertEquals(expResult, result);
+        ArrayList<BuyOrder> buyOrders = localDao.getBuyOrders();
+        BuyOrder matchBuyOrder = buyOrders.get(buyOrders.size() - 1);
+        ArrayList<SellOrder> sellOrders = localDao.getSellOrders();
+        SellOrder matchSellOrder = sellOrders.get(sellOrders.size() - 1);
+        Trade result = localDao.match();
+        if (matchBuyOrder.getQuantity().compareTo(matchSellOrder.getQuantity()) >= 0 ){
+            assertEquals(matchBuyOrder.getQuantity(),result.getQuantity());
+        }else{
+            assertEquals(matchSellOrder.getQuantity(),result.getQuantity());
+        }
+        assertEquals(matchBuyOrder.getPrice(), result.getPrice());
+        
+        
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -62,10 +82,9 @@ public class PsyduckOrderBookDaoFileImplTest {
     @Test
     public void testMatchAllOrders() {
         System.out.println("matchAllOrders");
-        PsyduckOrderBookDaoFileImpl instance = new PsyduckOrderBookDaoFileImpl();
-        instance.matchAllOrders();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        localDao.matchAllOrders();
+        assertTrue(localDao.isEmpty());
+        assertNotNull(!localDao.getTrades().isEmpty());
     }
 
     /**
@@ -74,11 +93,10 @@ public class PsyduckOrderBookDaoFileImplTest {
     @Test
     public void testAddBuyOrder() {
         System.out.println("addBuyOrder");
-        BuyOrder newBuyOrder = null;
-        PsyduckOrderBookDaoFileImpl instance = new PsyduckOrderBookDaoFileImpl();
-        instance.addBuyOrder(newBuyOrder);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        BuyOrder newBuyOrder = new BuyOrder(2001, new BigDecimal("30"),new BigDecimal("190.78"));
+        localDao.addBuyOrder(newBuyOrder);
+        assertEquals(1001, localDao.getBuyOrders().size());
+        assertEquals(newBuyOrder, localDao.getBuyOrders().get(localDao.getBuyOrders().size() -1));
     }
 
     /**
@@ -87,11 +105,10 @@ public class PsyduckOrderBookDaoFileImplTest {
     @Test
     public void testAddSellOrder() {
         System.out.println("addSellOrder");
-        SellOrder newSellOrder = null;
-        PsyduckOrderBookDaoFileImpl instance = new PsyduckOrderBookDaoFileImpl();
-        instance.addSellOrder(newSellOrder);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        SellOrder newSellOrder = new SellOrder(2002, new BigDecimal("40"),new BigDecimal("190.24"));
+        localDao.addSellOrder(newSellOrder);
+        assertEquals(1001, localDao.getSellOrders().size());
+        assertEquals(newSellOrder, localDao.getSellOrders().get(localDao.getSellOrders().size() -1));
     }
 
     /**
@@ -100,11 +117,10 @@ public class PsyduckOrderBookDaoFileImplTest {
     @Test
     public void testFillFullBuyOrder() {
         System.out.println("fillFullBuyOrder");
-        BuyOrder myBuyOrder = null;
-        PsyduckOrderBookDaoFileImpl instance = new PsyduckOrderBookDaoFileImpl();
-        instance.fillFullBuyOrder(myBuyOrder);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        BuyOrder myBuyOrder = localDao.getBuyOrders().get(0);
+        
+        localDao.fillFullBuyOrder(myBuyOrder);
+        assertEquals(999, localDao.getBuyOrders().size());
     }
 
     /**
@@ -113,11 +129,10 @@ public class PsyduckOrderBookDaoFileImplTest {
     @Test
     public void testFillFullSellOrder() {
         System.out.println("fillFullSellOrder");
-        SellOrder mySellOrder = null;
-        PsyduckOrderBookDaoFileImpl instance = new PsyduckOrderBookDaoFileImpl();
-        instance.fillFullSellOrder(mySellOrder);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        SellOrder mySellOrder = localDao.getSellOrders().get(0);
+        
+        localDao.fillFullSellOrder(mySellOrder);
+        assertEquals(999, localDao.getSellOrders().size());
     }
 
     /**
@@ -126,12 +141,20 @@ public class PsyduckOrderBookDaoFileImplTest {
     @Test
     public void testFillPartialBuyOrder() {
         System.out.println("fillPartialBuyOrder");
-        BuyOrder myBuyOrder = null;
-        SellOrder mySellOrder = null;
-        PsyduckOrderBookDaoFileImpl instance = new PsyduckOrderBookDaoFileImpl();
-        instance.fillPartialBuyOrder(myBuyOrder, mySellOrder);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        BuyOrder myBuyOrder = localDao.getBuyOrders().get(0);
+        BigDecimal buyQuantity = myBuyOrder.getQuantity();
+        
+        SellOrder mySellOrder = localDao.getSellOrders().get(0);
+        BigDecimal sellQuantity = mySellOrder.getQuantity();
+        int i = 1;
+        while (buyQuantity.compareTo(sellQuantity) <= 0){
+            mySellOrder = localDao.getSellOrders().get(i);
+            sellQuantity = mySellOrder.getQuantity();
+            i++;
+        }
+        localDao.fillPartialBuyOrder(myBuyOrder, mySellOrder);
+        assertNotNull(localDao.getBuyOrders().get(0));
+        assertEquals(buyQuantity.subtract(sellQuantity), myBuyOrder.getQuantity());
     }
 
     /**
@@ -140,12 +163,20 @@ public class PsyduckOrderBookDaoFileImplTest {
     @Test
     public void testFillPartialSellOrder() {
         System.out.println("fillPartialSellOrder");
-        BuyOrder myBuyOrder = null;
-        SellOrder mySellOrder = null;
-        PsyduckOrderBookDaoFileImpl instance = new PsyduckOrderBookDaoFileImpl();
-        instance.fillPartialSellOrder(myBuyOrder, mySellOrder);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        SellOrder mySellOrder = localDao.getSellOrders().get(0);
+        BigDecimal sellQuantity = mySellOrder.getQuantity();
+        
+        BuyOrder myBuyOrder = localDao.getBuyOrders().get(0);
+        BigDecimal buyQuantity = myBuyOrder.getQuantity();
+        int i = 1;
+        while (sellQuantity.compareTo(buyQuantity) <= 0){
+            myBuyOrder = localDao.getBuyOrders().get(i);
+            buyQuantity = myBuyOrder.getQuantity();
+            i++;
+        }
+        localDao.fillPartialSellOrder(myBuyOrder, mySellOrder);
+        assertNotNull(localDao.getSellOrders().get(0));
+        assertEquals(sellQuantity.subtract(buyQuantity), mySellOrder.getQuantity());
     }
 
     /**
@@ -153,13 +184,10 @@ public class PsyduckOrderBookDaoFileImplTest {
      */
     @Test
     public void testIsEmpty() {
-        System.out.println("isEmpty");
-        PsyduckOrderBookDaoFileImpl instance = new PsyduckOrderBookDaoFileImpl();
-        boolean expResult = false;
-        boolean result = instance.isEmpty();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        System.out.println("isEmpty"); 
+        assertFalse(localDao.isEmpty());
+        localDao.matchAllOrders();
+        assertTrue(localDao.isEmpty());
     }
 
     /**
@@ -168,12 +196,8 @@ public class PsyduckOrderBookDaoFileImplTest {
     @Test
     public void testGetBuyOrders() {
         System.out.println("getBuyOrders");
-        PsyduckOrderBookDaoFileImpl instance = new PsyduckOrderBookDaoFileImpl();
-        ArrayList<BuyOrder> expResult = null;
-        ArrayList<BuyOrder> result = instance.getBuyOrders();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        ArrayList<BuyOrder> myBuyOrders = localDao.getBuyOrders();
+        assertEquals(1000, myBuyOrders.size());
     }
 
     /**
@@ -182,12 +206,8 @@ public class PsyduckOrderBookDaoFileImplTest {
     @Test
     public void testGetSellOrders() {
         System.out.println("getSellOrders");
-        PsyduckOrderBookDaoFileImpl instance = new PsyduckOrderBookDaoFileImpl();
-        ArrayList<SellOrder> expResult = null;
-        ArrayList<SellOrder> result = instance.getSellOrders();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        ArrayList<SellOrder> mySellOrders = localDao.getSellOrders();
+        assertEquals(1000, mySellOrders.size());
     }
 
     /**
@@ -196,12 +216,10 @@ public class PsyduckOrderBookDaoFileImplTest {
     @Test
     public void testGetOrderBook() {
         System.out.println("getOrderBook");
-        PsyduckOrderBookDaoFileImpl instance = new PsyduckOrderBookDaoFileImpl();
-        ArrayList<ArrayList> expResult = null;
-        ArrayList<ArrayList> result = instance.getOrderBook();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        ArrayList<ArrayList> myOrderBook = localDao.getOrderBook();
+        assertEquals(2, myOrderBook.size());
+        assertEquals(1000, myOrderBook.get(0).size());
+        assertEquals(1000, myOrderBook.get(1).size());
     }
 
     /**
@@ -210,23 +228,12 @@ public class PsyduckOrderBookDaoFileImplTest {
     @Test
     public void testGetTrades() {
         System.out.println("getTrades");
-        PsyduckOrderBookDaoFileImpl instance = new PsyduckOrderBookDaoFileImpl();
-        ArrayList<Trade> expResult = null;
-        ArrayList<Trade> result = instance.getTrades();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        ArrayList<Trade> myTrades = localDao.getTrades();
+        assertEquals(0,myTrades.size());
+        Trade myTrade = localDao.match();
+        assertEquals(1, myTrades.size());
+        assertEquals(myTrade, myTrades.get(0));
+        
     }
 
-    /**
-     * Test of close method, of class PsyduckOrderBookDaoFileImpl.
-     */
-    @Test
-    public void testClose() {
-        System.out.println("close");
-        PsyduckOrderBookDaoFileImpl instance = new PsyduckOrderBookDaoFileImpl();
-        instance.close();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }  
 }
