@@ -82,9 +82,9 @@ public class PsyduckOrderBookDaoFileImplTest {
     @Test
     public void testMatchAllOrders() {
         System.out.println("matchAllOrders");
-        localDao.matchAllOrders();
-        assertTrue(localDao.isEmpty());
-        assertNotNull(!localDao.getTrades().isEmpty());
+        ArrayList<Trade> completed = localDao.matchAllOrders();
+        assertFalse(completed.isEmpty());
+        assertNotNull(!completed.isEmpty());
     }
 
     /**

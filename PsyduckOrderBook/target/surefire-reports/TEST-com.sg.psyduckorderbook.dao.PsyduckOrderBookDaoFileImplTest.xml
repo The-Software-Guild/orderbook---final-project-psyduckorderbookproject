@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.238" tests="14" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.368" tests="14" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="14.0.1+7"/>
@@ -14,7 +14,6 @@
     <property name="user.script" value=""/>
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
-    <property name="test" value="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
     <property name="user.dir" value="C:\Users\Mason\Documents\NetBeansProjects\PsyduckOrderBook"/>
     <property name="java.vm.compressedOopsMode" value="Zero based"/>
@@ -44,7 +43,7 @@
     <property name="java.class.path" value="C:\Program Files\NetBeans-12.0\netbeans\java\maven\bin\..\boot\plexus-classworlds-2.6.0.jar"/>
     <property name="java.vm.specification.version" value="14"/>
     <property name="sun.arch.data.model" value="64"/>
-    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher -Dtest=com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest -Dmaven.ext.class.path=C:\Program Files\NetBeans-12.0\netbeans\java\maven-nblib\netbeans-eventspy.jar -Dfile.encoding=UTF-8 surefire:test"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher -Dmaven.ext.class.path=C:\Program Files\NetBeans-12.0\netbeans\java\maven-nblib\netbeans-eventspy.jar -Dfile.encoding=UTF-8 install"/>
     <property name="java.home" value="C:\Program Files\Java\jdk-14.0.1"/>
     <property name="user.language" value="en"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
@@ -59,18 +58,18 @@
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase name="testFillPartialBuyOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.052"/>
-  <testcase name="testMatch" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.03"/>
+  <testcase name="testFillPartialBuyOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.074"/>
+  <testcase name="testMatch" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.042"/>
   <testcase name="testLoad" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.016"/>
-  <testcase name="testAddSellOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.017"/>
-  <testcase name="testMatchAllOrders" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.042"/>
-  <testcase name="testFillFullBuyOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.005"/>
-  <testcase name="testGetBuyOrders" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.005"/>
-  <testcase name="testFillFullSellOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.005"/>
-  <testcase name="testGetOrderBook" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.008"/>
-  <testcase name="testFillPartialSellOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.008"/>
-  <testcase name="testGetSellOrders" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.006"/>
-  <testcase name="testGetTrades" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.007"/>
-  <testcase name="testAddBuyOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.005"/>
-  <testcase name="testIsEmpty" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.019"/>
+  <testcase name="testAddSellOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.015"/>
+  <testcase name="testMatchAllOrders" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.049"/>
+  <testcase name="testFillFullBuyOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.015"/>
+  <testcase name="testGetBuyOrders" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.013"/>
+  <testcase name="testFillFullSellOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.017"/>
+  <testcase name="testGetOrderBook" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.012"/>
+  <testcase name="testFillPartialSellOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.016"/>
+  <testcase name="testGetSellOrders" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.013"/>
+  <testcase name="testGetTrades" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.016"/>
+  <testcase name="testAddBuyOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.014"/>
+  <testcase name="testIsEmpty" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.024"/>
 </testsuite>

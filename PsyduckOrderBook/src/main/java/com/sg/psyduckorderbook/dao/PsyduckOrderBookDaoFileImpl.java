@@ -3,6 +3,9 @@ package com.sg.psyduckorderbook.dao;
 import com.sg.psyduckorderbook.dto.BuyOrder;
 import com.sg.psyduckorderbook.dto.SellOrder;
 import com.sg.psyduckorderbook.dto.Trade;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,10 +15,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.util.Scanner;
 
 public class PsyduckOrderBookDaoFileImpl implements PsyduckOrderBookDao{
     
-    PrintWriter orderBookOut, tradesOut;
+    PrintWriter orderBookOut, tradesOut, exportOut;
     private ArrayList<ArrayList> orderbook;
     private ArrayList<BuyOrder> buyOrders;
     private ArrayList<SellOrder> sellOrders;
@@ -33,7 +37,7 @@ public class PsyduckOrderBookDaoFileImpl implements PsyduckOrderBookDao{
         Random randomizer = new Random();
         try {
             orderBookOut = new PrintWriter(new FileWriter("OrderBook.txt"));
-            orderBookOut.println("Sell Orders" + "\t\t\t\t\t\t" + "Buy Orders");
+            //orderBookOut.println("Buy Orders" + "\t\t\t\t\t\t" + "Sell Orders");
             tradesOut = new PrintWriter(new FileWriter("Trades.txt"));
         } catch (IOException e) {
             throw new PsyduckOrderBookPersistenceException("Could not create files");
@@ -52,7 +56,7 @@ public class PsyduckOrderBookDaoFileImpl implements PsyduckOrderBookDao{
             tempQuantity = new BigDecimal("" + quantityInt);
             tempQuantity.setScale(2, RoundingMode.HALF_UP);
             tempPrice.setScale(2, RoundingMode.HALF_UP);
-            if(i % 2 == 0){
+            if(i % 2 == 1){
                 addBuyOrder(new BuyOrder(i, tempQuantity, tempPrice));
             } else {
                 addSellOrder(new SellOrder(i, tempQuantity, tempPrice));
@@ -60,30 +64,190 @@ public class PsyduckOrderBookDaoFileImpl implements PsyduckOrderBookDao{
         }
         Collections.sort(buyOrders);
         Collections.sort(sellOrders);
+        addAllOrders();
     }
     
+    @Override
+    public void loadFile(String file) throws PsyduckOrderBookPersistenceException {
+        Scanner input;
+        orderbook = new ArrayList<>();
+        buyOrders = new ArrayList<>();
+        sellOrders = new ArrayList<>();
+        trades = new ArrayList<>();
+        orderbook.add(buyOrders);
+        orderbook.add(sellOrders);
+        
+        try {
+            orderBookOut = new PrintWriter(new FileWriter("OrderBook.txt"));
+            tradesOut = new PrintWriter(new FileWriter("Trades.txt"));
+        } catch (IOException e) {
+            throw new PsyduckOrderBookPersistenceException("Could not create files");
+        }
+        
+        try {
+            input = new Scanner(new BufferedReader(new FileReader(file)));
+        } catch (FileNotFoundException e) {
+            throw new PsyduckOrderBookPersistenceException("Could not load orders", e);
+        }
+        String currentLine;
+        currentLine = input.nextLine();
+        
+        String delimeter = null;
+        
+        if(currentLine.contains("::"))
+            delimeter = "::";
+        else if (currentLine.contains(";"))
+            delimeter = ";";
+        else if (currentLine.contains(","))
+            delimeter = ",";
+        
+        BuyOrder currentBuyOrder;
+        SellOrder currentSellOrder;
+        boolean nextLine = input.hasNext();
+        
+        if(!delimeter.equals(null)) {
+            while (nextLine) {
+                int cut1 = currentLine.indexOf(delimeter);
+                String idString = currentLine.substring(0, cut1);
+            
+                int cut2 = currentLine.indexOf(delimeter, cut1 + delimeter.length());
+                String quantityString = currentLine.substring(cut1 + delimeter.length(), cut2);
+            
+                String priceString = currentLine.substring(cut2  + delimeter.length());
+            
+                int id = Integer.parseInt(idString);
+                BigDecimal quantity = new BigDecimal(quantityString);
+                BigDecimal price = new BigDecimal(priceString);
+            
+                if(id % 2 == 1){
+                    addBuyOrder(new BuyOrder(id, quantity, price));
+                } else {
+                    addSellOrder(new SellOrder(id, quantity, price));
+                }
+                if (nextLine = input.hasNext())
+                    currentLine = input.nextLine();
+            }
+        }
+        Collections.sort(buyOrders);
+        Collections.sort(sellOrders);
+        addAllOrders();
+    }
+    
+    public void exportFile() throws PsyduckOrderBookPersistenceException{
+        try{
+            exportOut = new PrintWriter(new FileWriter("Book.txt"));
+        } catch (IOException e){
+            throw new PsyduckOrderBookPersistenceException("Could not export data from memory");
+        }
+        if (!buyOrders.isEmpty()){
+            for (int i = 0; i < buyOrders.size(); i++){
+		exportOut.println(buyOrders.get(i).getOrderID() + "::" + 
+                    buyOrders.get(i).getQuantity() + "::" + 
+                    buyOrders.get(i).getPrice());
+                //System.out.println("Buy " + i);
+            }
+        }
+        if (!sellOrders.isEmpty()){
+            for (int i = 0; i < sellOrders.size(); i++){
+                exportOut.println(sellOrders.get(i).getOrderID() + "::" + 
+                    sellOrders.get(i).getQuantity() + "::" + 
+                    sellOrders.get(i).getPrice());
+                //System.out.println("Sell: " + i);
+            }  
+        }
+        exportOut.flush();
+        exportOut.close();
+    }
+    
+    public void addAllOrders() {
+        boolean nextLine = false;
+        int size = 0;
+        int difference = 0;
+        orderBookOut.println("Buy Orders\t\t\t\t\t\t\t\tSell Orders");
+        ArrayList<BuyOrder> myBuyOrders = orderbook.get(0);
+        ArrayList<SellOrder> mySellOrders = orderbook.get(1);
+        
+        if(myBuyOrders.size() > mySellOrders.size()) {
+            size = myBuyOrders.size();
+            difference = myBuyOrders.size() - mySellOrders.size();
+            for(int i = size; i >= 0; i --) {
+            if (i  < myBuyOrders.size()) {
+                orderBookOut.print("ID: " + myBuyOrders.get(i).getOrderID() + ", Price: " +
+                    myBuyOrders.get(i).getPrice() + ", Quantity: " + 
+                    myBuyOrders.get(i).getQuantity() + "\t\t\t\t\t");
+                nextLine = false;
+            } else {
+               orderBookOut.print("\t\t\t\t\t\t\t\t\t");
+            }
+            if (i - difference < mySellOrders.size() && i - difference >= 0) {
+                orderBookOut.print("ID: " + mySellOrders.get(i - difference).getOrderID() + ", Price: " +
+                    mySellOrders.get(i - difference).getPrice() + ", Quantity: " + 
+                    mySellOrders.get(i - difference).getQuantity() + "\t\t\t\t\t");
+                nextLine = true;
+            } else {
+                nextLine = true;
+            }
+            if(nextLine == true)
+                orderBookOut.println();
+            }
+        } else {
+            size = mySellOrders.size();
+            difference = mySellOrders.size() - myBuyOrders.size();
+            for(int i = size; i >= 0; i --) {
+            if (i - difference < myBuyOrders.size() && i - difference >= 0) {
+                orderBookOut.print("ID: " + myBuyOrders.get(i - difference).getOrderID() + ", Price: " +
+                    myBuyOrders.get(i - difference).getPrice() + ", Quantity: " + 
+                    myBuyOrders.get(i - difference).getQuantity() + "\t\t\t\t\t");
+                nextLine = false;
+            } else {
+               orderBookOut.print("\t\t\t\t\t\t\t\t\t");
+            }
+            if (i  < mySellOrders.size()) {
+                orderBookOut.print("ID: " + mySellOrders.get(i).getOrderID() + ", Price: " +
+                    mySellOrders.get(i).getPrice() + ", Quantity: " + 
+                    mySellOrders.get(i).getQuantity() + "\t\t\t\t\t");
+                nextLine = true;
+            } else {
+                nextLine = true;
+            }
+            if(nextLine == true)
+                orderBookOut.println();
+        }
+        }
+        
+        System.out.println("Buy " + myBuyOrders.size());
+        System.out.println("Sell " + mySellOrders.size());
+        /*
+        for(int i = size - 1; i >= 0; i --) {
+            if (i  < myBuyOrders.size()) {
+                orderBookOut.print("ID: " + myBuyOrders.get(i).getOrderID() + ", Price: " +
+                    myBuyOrders.get(i).getPrice() + ", Quantity: " + 
+                    myBuyOrders.get(i).getQuantity() + "\t\t\t\t\t");
+                nextLine = false;
+            } else {
+               orderBookOut.print("\t\t\t\t\t\t\t\t\t");
+            }
+            if (i - difference < mySellOrders.size()) {
+                orderBookOut.print("ID: " + mySellOrders.get(i).getOrderID() + ", Price: " +
+                    mySellOrders.get(i).getPrice() + ", Quantity: " + 
+                    mySellOrders.get(i).getQuantity() + "\t\t\t\t\t");
+                nextLine = true;
+            } else {
+                nextLine = true;
+            }
+            if(nextLine == true)
+                orderBookOut.println();
+        }
+*/
+        orderBookOut.flush();
+        orderBookOut.close();
+    }
+    
+    @Override
      public Trade match() {
         Trade newTrade = null;
         BuyOrder myBuyOrder = buyOrders.get(buyOrders.size() - 1);
         SellOrder mySellOrder = sellOrders.get(sellOrders.size() - 1);
-        /*
-        BigDecimal compareBD = new BigDecimal("9999999");
-        BigDecimal difference;
-        SellOrder mySellOrder = null;
-        SellOrder compareSellOrder;
-        BuyOrder myBuyOrder = buyOrders.get(0);
-        for (int i = sellOrders.size() - 1; i > 0; i--){
-            compareSellOrder = sellOrders.get(i);
-            difference = compareSellOrder.getPrice().subtract(myBuyOrder.getPrice());
-            if (difference.compareTo(BigDecimal.ZERO) == -1){
-                difference = difference.multiply(new BigDecimal("-1"));
-            }
-            if (difference.compareTo(compareBD) == -1){
-                compareBD = difference;
-                mySellOrder = sellOrders.get(i);
-            }
-        }
-        */
         if (myBuyOrder.getQuantity().compareTo(mySellOrder.getQuantity()) == 0){
             fillFullBuyOrder(myBuyOrder);
             fillFullSellOrder(mySellOrder);
@@ -103,23 +267,23 @@ public class PsyduckOrderBookDaoFileImpl implements PsyduckOrderBookDao{
     }
 
     @Override
-    public void matchAllOrders() {
+    public ArrayList<Trade> matchAllOrders() {
+        ArrayList<Trade> output = new ArrayList<>();
         while (!isEmpty()){
-            match();
+            output.add(match());
+            
         }
+        return output;
     }
-
 
     @Override
     public void addBuyOrder(BuyOrder newBuyOrder) {
         buyOrders.add(newBuyOrder);
-        orderBookOut.println(newBuyOrder.toStringFile());
     }
 
     @Override
     public void addSellOrder(SellOrder newSellOrder) {
         sellOrders.add(newSellOrder);
-        orderBookOut.print(newSellOrder.toStringFile() + "\t\t");
     }
 
     @Override
@@ -168,8 +332,9 @@ public class PsyduckOrderBookDaoFileImpl implements PsyduckOrderBookDao{
     }
 
     @Override
-    public void close() {
-        orderBookOut.close();
+    public void close() throws PsyduckOrderBookPersistenceException{
+        exportFile();
+        tradesOut.flush();
         tradesOut.close();
     }
 }

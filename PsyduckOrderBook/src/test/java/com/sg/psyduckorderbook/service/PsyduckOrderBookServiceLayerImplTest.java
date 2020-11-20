@@ -6,6 +6,8 @@ import com.sg.psyduckorderbook.dto.BuyOrder;
 import com.sg.psyduckorderbook.dto.SellOrder;
 import com.sg.psyduckorderbook.dto.Trade;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,12 +45,17 @@ public class PsyduckOrderBookServiceLayerImplTest {
     
     @org.junit.jupiter.api.Test
     public void testMatchAllOrders() throws PsyduckOrderBookIsEmpty {
-        boolean isEmpty = false;
-        Trade match = service.match();
-        if (match == null) {
-            isEmpty = true;
+        ArrayList<Trade> result = service.matchAllOrders();
+        Trade ex1 = new Trade(1, LocalDateTime.now(), 
+               new BigDecimal(190), new BigDecimal(42));
+        ArrayList<Trade> expected = new ArrayList<>();
+        expected.add(ex1);
+        
+        for(int i = 0; i < result.size(); i++) {
+            assertEquals(expected.get(i).getNumberID(), result.get(i).getNumberID());
+            assertEquals(expected.get(i).getPrice(), result.get(i).getPrice());
+            assertEquals(expected.get(i).getQuantity(), expected.get(i).getQuantity());
         }
-        assertFalse(isEmpty);
     }
     
     @org.junit.jupiter.api.Test

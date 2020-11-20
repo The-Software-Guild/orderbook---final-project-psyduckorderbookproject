@@ -5,6 +5,7 @@ import com.sg.psyduckorderbook.dto.Order;
 import com.sg.psyduckorderbook.dto.SellOrder;
 import com.sg.psyduckorderbook.dto.Trade;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,18 +34,18 @@ public class PsyduckOrderBookView {
         int page = 10;
         int size = 0;
         int amount = 0;
-        io.println("Buy Orders\t\t\t\tSell Orders");
+        io.println("Buy Orders\t\t\t\t\tSell Orders");
         ArrayList<BuyOrder> myBuyOrders = orderBook.get(0);
         ArrayList<SellOrder> mySellOrders = orderBook.get(1);
         size = myBuyOrders.size();
         int difference = myBuyOrders.size() - mySellOrders.size();
         amount = size/page;
-        for(int i = size ; i > 0; i --) {
+        for(int i = size ; i >= 0; i --) {
             
             if (i < myBuyOrders.size()) {
                 io.print("ID: " + myBuyOrders.get(i).getOrderID() + ", Price: " +
                     myBuyOrders.get(i).getPrice() + ", Quantity: " + 
-                    myBuyOrders.get(i).getQuantity() + "\t");
+                    myBuyOrders.get(i).getQuantity() + "\t\t");
             }
             if (i - difference < mySellOrders.size()) {
                 io.println("ID: " + mySellOrders.get(i-difference).getOrderID() + ", Price: " +
@@ -91,9 +92,34 @@ public class PsyduckOrderBookView {
     }
     
     public void allTrades(List<Trade> trades) {
+        int n = 1;
+        int page = 10;
+        int size = trades.size();
+        int amount = size/page;
         for (Trade currentTrade: trades) {
             io.println("Time: " + currentTrade.getTime() + ", Trade ID#: " + 
                 currentTrade.getNumberID() + ", Quantity: " + currentTrade.getQuantity()); 
+            n++;
+            if(n > page) {
+                io.println("");
+                boolean input = false;
+                String answer = "";
+                io.println("Would you like to keep going? There are " + 
+                    String.valueOf(amount) + " pages left");
+                while(!input) {
+                    answer = io.readString("Please input yes or no").toLowerCase();
+                    if (answer.equals("yes") || answer.equals("no")) {
+                        input = true;
+                    } else {
+                        io.println("Invalid input");
+                    }
+                }
+                if(answer.equals("yes")) {
+                    n = 1;
+                    amount --;
+                    io.println("");
+                }
+            }
         }
     }
 
@@ -160,8 +186,8 @@ public class PsyduckOrderBookView {
         io.println("    Average Sel Price: $" + String.valueOf(avgSellPrice));
     }
 
-    public void tradeSuccess(int tradeNumber) {
-        io.println("Trade has successfully been completed, trade ID# is: " + tradeNumber);
+    public void tradeSuccess(int tradeNumber, LocalDateTime time) {
+        io.println(String.valueOf(time) + " Trade has successfully been completed, trade ID# is: " + tradeNumber);
     }
 
     public void tradeFailure() {
@@ -182,5 +208,24 @@ public class PsyduckOrderBookView {
 
     public void noTrades() {
         io.println("No trades have been completed at this time");
+    }
+
+    public String takeInput() {
+        boolean valid = false;
+        String input = null;
+        while(!valid) {
+            input = io.readString("Do you want to read input? (y/n)");
+            input.toLowerCase();
+            if(input.equals("y") || input.equals("n")) {
+                valid = true;
+            } else {
+                io.println("Not a valid input please enter y or n");
+            }
+        }
+        return input;
+    }
+
+    public String getFile() {
+        return io.readString("Please enter the name of the file you want to read from");
     }
 }

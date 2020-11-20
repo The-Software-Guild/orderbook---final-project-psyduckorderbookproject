@@ -85,8 +85,17 @@ public class PsyduckOrderDaoStubImpl implements PsyduckOrderBookDao{
     }
     
     @Override
-    public void matchAllOrders() {
+    public ArrayList<Trade> matchAllOrders() {
+        ArrayList<Trade> completed = new ArrayList<>();
+        int id = 1;
+        LocalDateTime time = LocalDateTime.now();
+        BigDecimal price = onlyBuyOrder.getPrice();
+        BigDecimal quantity = onlyBuyOrder.getQuantity();
         
+        onlyTrade = new Trade(id, time, price, quantity);
+        completed.add(onlyTrade);
+        
+        return completed;
     }
     
     @Override
@@ -121,6 +130,11 @@ public class PsyduckOrderDaoStubImpl implements PsyduckOrderBookDao{
 
     @Override
     public void load() throws PsyduckOrderBookPersistenceException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void loadFile(String file) throws PsyduckOrderBookPersistenceException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

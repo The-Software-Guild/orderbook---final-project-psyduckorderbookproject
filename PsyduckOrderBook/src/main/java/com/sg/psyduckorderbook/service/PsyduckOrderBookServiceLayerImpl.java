@@ -29,8 +29,8 @@ public class PsyduckOrderBookServiceLayerImpl implements PsyduckOrderBookService
     }
 
     @Override
-    public void matchAllOrders() {
-        localDao.matchAllOrders();
+    public ArrayList<Trade> matchAllOrders() {
+        return localDao.matchAllOrders();
     }
 
     @Override
@@ -59,7 +59,12 @@ public class PsyduckOrderBookServiceLayerImpl implements PsyduckOrderBookService
     }
 
     @Override
-    public void close() {
+    public void close() throws PsyduckOrderBookPersistenceException{
         localDao.close();
+    }
+
+    @Override
+    public void loadFile(String file) throws PsyduckOrderBookPersistenceException {
+        localDao.loadFile(file);
     }
 }

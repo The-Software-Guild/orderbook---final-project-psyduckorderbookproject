@@ -13,7 +13,9 @@ public interface PsyduckOrderBookDao {
     
     public void load() throws PsyduckOrderBookPersistenceException;
     
-    public void matchAllOrders();
+    public void loadFile(String file) throws PsyduckOrderBookPersistenceException;
+    
+    public ArrayList<Trade> matchAllOrders();
     
     public void addBuyOrder(BuyOrder newBuyOrder);
     
@@ -35,5 +37,5 @@ public interface PsyduckOrderBookDao {
     
     public ArrayList<Trade> getTrades();
 
-    public void close();
+    public void close() throws PsyduckOrderBookPersistenceException;
 }

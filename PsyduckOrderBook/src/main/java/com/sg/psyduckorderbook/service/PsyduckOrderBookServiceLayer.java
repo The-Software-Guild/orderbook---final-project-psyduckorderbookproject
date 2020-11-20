@@ -18,11 +18,13 @@ public interface PsyduckOrderBookServiceLayer {
     
     public void load() throws PsyduckOrderBookPersistenceException;
     
-    public void matchAllOrders();
+    public void loadFile(String file) throws PsyduckOrderBookPersistenceException;
+    
+    public ArrayList<Trade> matchAllOrders();
     
     public ArrayList<ArrayList> getOrderBook();
     
     public ArrayList<Trade> getTrades();
 
-    public void close();
+    public void close() throws PsyduckOrderBookPersistenceException;
 }

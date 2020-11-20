@@ -26,15 +26,27 @@ public class PsyduckOrderBookController {
         this.service = service;
     }
     
-    public void run() {
+    public void run() throws PsyduckOrderBookPersistenceException{
         
         boolean keepGoing = true;
         
-        try {
-            service.load();
-        } catch (PsyduckOrderBookPersistenceException e){
-            keepGoing = false;
-            view.loadError();
+        String read = takeInput();
+        
+        if (read.equals("n")) {
+            try {
+                service.load();
+            } catch (PsyduckOrderBookPersistenceException e){
+                keepGoing = false;
+                view.loadError();
+            }
+        } else {
+            String fileName = getFile();
+            try {
+                service.loadFile(fileName);
+            } catch (PsyduckOrderBookPersistenceException e){
+                keepGoing = false;
+                view.loadError();
+            }
         }
         
         while (keepGoing) {
@@ -83,7 +95,11 @@ public class PsyduckOrderBookController {
 
     private void matchAllOrders() {
         view.load();
-        service.matchAllOrders();
+        ArrayList<Trade> output = service.matchAllOrders();
+        
+        for(Trade success: output) {
+            view.tradeSuccess(success.getNumberID(), success.getTime());
+        }
         view.matchAllBanner();
     }
 
@@ -101,7 +117,7 @@ public class PsyduckOrderBookController {
         view.unknownCommand();
     }
 
-    private void exitMessage() {
+    private void exitMessage() throws PsyduckOrderBookPersistenceException{
         service.close();
         view.exitMessage();
     }
@@ -128,9 +144,17 @@ public class PsyduckOrderBookController {
         Trade currentTrade = null;
         try {
             currentTrade = service.match();
-            view.tradeSuccess(currentTrade.getNumberID());
+            view.tradeSuccess(currentTrade.getNumberID(), currentTrade.getTime());
         } catch (PsyduckOrderBookIsEmpty ex) {
             view.orderBookIsEmpty();
         }
+    }
+
+    private String takeInput() {
+        return view.takeInput();
+    }
+
+    private String getFile() {
+        return view.getFile();
     }
 }
