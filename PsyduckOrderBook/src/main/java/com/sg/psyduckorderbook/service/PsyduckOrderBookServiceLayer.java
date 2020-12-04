@@ -27,4 +27,6 @@ public interface PsyduckOrderBookServiceLayer {
     public ArrayList<Trade> getTrades();
 
     public void close() throws PsyduckOrderBookPersistenceException;
+
+    public void loadFIXFile(String fixName) throws PsyduckOrderBookPersistenceException;
 }

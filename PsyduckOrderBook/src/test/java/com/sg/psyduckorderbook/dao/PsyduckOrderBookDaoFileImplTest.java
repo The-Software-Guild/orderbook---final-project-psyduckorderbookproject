@@ -36,7 +36,7 @@ public class PsyduckOrderBookDaoFileImplTest {
     }
     
     @AfterEach
-    public void tearDown() {
+    public void tearDown() throws PsyduckOrderBookPersistenceException {
         localDao.close();
     }
 

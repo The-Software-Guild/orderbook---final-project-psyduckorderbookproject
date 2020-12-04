@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.sg.psyduckorderbook.service.PsyduckOrderBookServiceLayerImplTest" time="0.514" tests="8" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.sg.psyduckorderbook.service.PsyduckOrderBookServiceLayerImplTest" time="0.379" tests="8" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="14.0.1+7"/>
@@ -58,12 +58,12 @@
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase name="testMatch" classname="com.sg.psyduckorderbook.service.PsyduckOrderBookServiceLayerImplTest" time="0"/>
-  <testcase name="testLoad" classname="com.sg.psyduckorderbook.service.PsyduckOrderBookServiceLayerImplTest" time="0"/>
-  <testcase name="testMatchAllOrders" classname="com.sg.psyduckorderbook.service.PsyduckOrderBookServiceLayerImplTest" time="0.001"/>
+  <testcase name="testMatch" classname="com.sg.psyduckorderbook.service.PsyduckOrderBookServiceLayerImplTest" time="0.001"/>
+  <testcase name="testLoad" classname="com.sg.psyduckorderbook.service.PsyduckOrderBookServiceLayerImplTest" time="0.001"/>
+  <testcase name="testMatchAllOrders" classname="com.sg.psyduckorderbook.service.PsyduckOrderBookServiceLayerImplTest" time="0"/>
   <testcase name="testGetBuyOrders" classname="com.sg.psyduckorderbook.service.PsyduckOrderBookServiceLayerImplTest" time="0"/>
   <testcase name="testGetOrderBook" classname="com.sg.psyduckorderbook.service.PsyduckOrderBookServiceLayerImplTest" time="0"/>
-  <testcase name="testGetSellOrders" classname="com.sg.psyduckorderbook.service.PsyduckOrderBookServiceLayerImplTest" time="0.001"/>
+  <testcase name="testGetSellOrders" classname="com.sg.psyduckorderbook.service.PsyduckOrderBookServiceLayerImplTest" time="0"/>
   <testcase name="testGetTrades" classname="com.sg.psyduckorderbook.service.PsyduckOrderBookServiceLayerImplTest" time="0"/>
   <testcase name="testIsEmpty" classname="com.sg.psyduckorderbook.service.PsyduckOrderBookServiceLayerImplTest" time="0"/>
 </testsuite>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.368" tests="14" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.342" tests="14" errors="0" skipped="0" failures="1">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="14.0.1+7"/>
@@ -58,18 +58,24 @@
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase name="testFillPartialBuyOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.074"/>
-  <testcase name="testMatch" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.042"/>
-  <testcase name="testLoad" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.016"/>
-  <testcase name="testAddSellOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.015"/>
-  <testcase name="testMatchAllOrders" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.049"/>
-  <testcase name="testFillFullBuyOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.015"/>
-  <testcase name="testGetBuyOrders" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.013"/>
-  <testcase name="testFillFullSellOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.017"/>
-  <testcase name="testGetOrderBook" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.012"/>
+  <testcase name="testFillPartialBuyOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.08"/>
+  <testcase name="testMatch" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.044">
+    <failure message="expected: &lt;22&gt; but was: &lt;20&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: expected: <22> but was: <20>
+	at com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest.testMatch(PsyduckOrderBookDaoFileImplTest.java:68)
+]]></failure>
+    <system-out><![CDATA[match
+]]></system-out>
+  </testcase>
+  <testcase name="testLoad" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.015"/>
+  <testcase name="testAddSellOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.013"/>
+  <testcase name="testMatchAllOrders" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.05"/>
+  <testcase name="testFillFullBuyOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.012"/>
+  <testcase name="testGetBuyOrders" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.01"/>
+  <testcase name="testFillFullSellOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.014"/>
+  <testcase name="testGetOrderBook" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.014"/>
   <testcase name="testFillPartialSellOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.016"/>
   <testcase name="testGetSellOrders" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.013"/>
-  <testcase name="testGetTrades" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.016"/>
-  <testcase name="testAddBuyOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.014"/>
-  <testcase name="testIsEmpty" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.024"/>
+  <testcase name="testGetTrades" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.014"/>
+  <testcase name="testAddBuyOrder" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.01"/>
+  <testcase name="testIsEmpty" classname="com.sg.psyduckorderbook.dao.PsyduckOrderBookDaoFileImplTest" time="0.025"/>
 </testsuite>

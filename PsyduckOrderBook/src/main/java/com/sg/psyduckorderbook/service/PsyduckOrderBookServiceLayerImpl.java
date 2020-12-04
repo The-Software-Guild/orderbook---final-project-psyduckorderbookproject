@@ -67,4 +67,9 @@ public class PsyduckOrderBookServiceLayerImpl implements PsyduckOrderBookService
     public void loadFile(String file) throws PsyduckOrderBookPersistenceException {
         localDao.loadFile(file);
     }
+
+    @Override
+    public void loadFIXFile(String fixName) throws PsyduckOrderBookPersistenceException {
+        localDao.loadFIXOrder(fixName);
+    }
 }

@@ -228,4 +228,15 @@ public class PsyduckOrderBookView {
     public String getFile() {
         return io.readString("Please enter the name of the file you want to read from");
     }
+
+    public int decideFile() {
+        io.println("Do you want to read from a normal file or a FIX file?");
+        io.println("Press 1 for normal file");
+        io.println("Press 2 for a FIX file");
+        return io.readInt("", 1, 2);
+    }
+
+    public String getFIXName() {
+        return io.readString("Please enter the name of the FIX file you want to read from");
+    }
 }

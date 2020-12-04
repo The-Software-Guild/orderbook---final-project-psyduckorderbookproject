@@ -40,12 +40,24 @@ public class PsyduckOrderBookController {
                 view.loadError();
             }
         } else {
-            String fileName = getFile();
-            try {
-                service.loadFile(fileName);
-            } catch (PsyduckOrderBookPersistenceException e){
-                keepGoing = false;
-                view.loadError();
+            int choice = decideFile();
+                
+            if(choice == 1) {
+                String fileName = getFile();
+                try {
+                    service.loadFile(fileName);
+                } catch (PsyduckOrderBookPersistenceException e){
+                    keepGoing = false;
+                    view.loadError();
+                }
+            } else if (choice == 2) {
+                String fixName = getFIXname();
+                try {
+                    service.loadFIXFile(fixName);
+                } catch (PsyduckOrderBookPersistenceException e){
+                    keepGoing = false;
+                    view.loadError();
+                }
             }
         }
         
@@ -156,5 +168,13 @@ public class PsyduckOrderBookController {
 
     private String getFile() {
         return view.getFile();
+    }
+
+    private int decideFile() {
+        return view.decideFile();
+    }
+
+    private String getFIXname() {
+        return view.getFIXName();
     }
 }

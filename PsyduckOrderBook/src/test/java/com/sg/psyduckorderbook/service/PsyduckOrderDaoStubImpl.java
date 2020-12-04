@@ -137,4 +137,9 @@ public class PsyduckOrderDaoStubImpl implements PsyduckOrderBookDao{
     public void loadFile(String file) throws PsyduckOrderBookPersistenceException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void loadFIXOrder(String file) throws PsyduckOrderBookPersistenceException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

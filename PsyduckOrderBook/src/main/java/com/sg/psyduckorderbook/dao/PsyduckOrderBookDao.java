@@ -38,4 +38,6 @@ public interface PsyduckOrderBookDao {
     public ArrayList<Trade> getTrades();
 
     public void close() throws PsyduckOrderBookPersistenceException;
+    
+    public void loadFIXOrder(String file) throws PsyduckOrderBookPersistenceException;
 }
